@@ -81,6 +81,31 @@ services:
     volumes:
       - mongo-data:/data/db
   
+  # setup:
+  #   image: curlimages/curl:latest
+  #   depends_on:
+  #     - kong
+  #     - employee-microservice
+  #   entrypoint: >
+  #     /bin/sh -c "
+  #       sleep 20;  # Wait for services to start
+  #       curl -i -X POST http://kong:8001/services/ \
+  #         --data 'name=employee-microservice' \
+  #         --data 'url=http://employee-microservice:3000';  # Ensure the URL points to the correct port
+  #       curl -i -X POST http://kong:8001/services/employee-microservice/routes \
+  #         --data 'paths[]=/employee' \
+  #         --data 'methods[]=GET' \
+  #         --data 'methods[]=POST';
+  #       curl -i -X POST http://kong:8001/services/employee-microservice/routes \
+  #         --data 'paths[]=/auth/register' \
+  #         --data 'methods[]=POST';
+  #       curl -i -X POST http://kong:8001/services/employee-microservice/routes \
+  #         --data 'paths[]=/auth/login' \
+  #         --data 'methods[]=POST';
+  #       curl -i -X POST http://kong:8001/services/employee-microservice/routes \
+  #         --data 'paths[]=/auth' \
+  #         --data 'methods[]=POST';
+  #     "
 
 volumes:
   kong-database:
