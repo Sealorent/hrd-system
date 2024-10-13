@@ -1,0 +1,114 @@
+_format_version: "2.1"
+services:
+  - name: employee-microservice
+    url: http://testlnk-employee-microservice-1:3000
+    routes:
+      - name: employee-route
+        paths:
+          - /employee
+        methods:
+          - GET
+          - POST
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300
+      - name: auth-register-route
+        paths:
+          - /auth/register
+        methods:
+          - POST
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300
+      - name: auth-login-route
+        paths:
+          - /auth/login
+        methods:
+          - POST
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300
+      - name: employees-get-route
+        paths:
+          - /employees
+        methods:
+          - GET
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300
+      - name: employees-status-route
+        paths:
+          - /employees/status
+        methods:
+          - PUT
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300
+      - name: employees-update-profile-route
+        paths:
+          - /employees/update-profile
+        methods:
+          - PUT
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300
+      - name: employees-update-employee-route
+        paths:
+          - /employees/update-employee
+        methods:
+          - PATCH
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300
+      - name: employees-delete-route
+        paths:
+          - /employees/delete
+        methods:
+          - DELETE
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300
+      - name: employees-update-leave-count-route
+        paths:
+          - /employees/update-leave-count
+        methods:
+          - PUT
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300
+      - name: employees-profile-route
+        paths:
+          - /employees/profile
+        methods:
+          - GET
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300
+
+  - name: leave-microservice
+    url: http://testlnk-leave-microservice-1:3001
+    routes:
+      - name: leaves-route
+        paths:
+          - /leaves
+        methods:
+          - GET
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300
+      - name: leaves-status-route
+        paths:
+          - /leaves/status
+        methods:
+          - PUT
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300
+      - name: leaves-add-route
+        paths:
+          - /leaves/add
+        methods:
+          - POST
+          - OPTIONS
+        strip_path: false
+        regex_priority: 300

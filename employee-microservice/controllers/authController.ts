@@ -27,12 +27,12 @@ export const registerEmployee = async (req: Request, res: Response) => {
 
         // Save the employee to the database
         const savedEmployee = await newEmployee.save();
-        sendSuccessResponse(res, savedEmployee, 'Employee registered successfully');
+        return sendSuccessResponse(res, savedEmployee, 'Employee registered successfully');
     } catch (error: any) {
         if (error instanceof z.ZodError) {
             return sendErrorResponse(res, error.errors.map(e => e.message).join(', '), 400);
         }
-        sendErrorResponse(res, error.message || 'Error registering employee');
+       return sendErrorResponse(res, error.message || 'Error registering employee');
     }
 };
 
@@ -52,15 +52,24 @@ export const loginEmployee = async (req: Request, res: Response) => {
             return sendErrorResponse(res, 'Invalid password', 401);
         }
 
+        // Create a JWT token excluding the password
+        const { password: _, ...employeeJwt } = employee.toJSON(); // Use destructuring to exclude the password
+
         // Create a JWT token
-        const token = jwt.sign({ id: employee._id, email: employee.email }, JWT_SECRET, {
+        const token = jwt.sign({ 
+            employeeJwt,
+        }, JWT_SECRET, {
             expiresIn: '1h', // Token expiration time
         });
 
-        // Respond with employee data and token (excluding password)
-        const { password: _, ...employeeData } = employee.toObject(); // Exclude the password field
-        sendSuccessResponse(res, { employee: employeeData, token }, 'Login successful');
+        const employeeData = {
+            username: employee.username,
+            position: employee.position,
+            department: employee.department,
+        }
+
+        return sendSuccessResponse(res, { employee: employeeData, token }, 'Login successful');
     } catch (error: any) {
-        sendErrorResponse(res, error.message || 'Error logging in');
+        return sendErrorResponse(res, error.message || 'Error logging in');
     }
 };

@@ -26,6 +26,37 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  acceptedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Employee',
+  },
+  acceptedAt: {
+    type: Date,
+  },
+  status: {
+    type: String,
+    enum: ['Pending', 'Accepted', 'Rejected'],
+    default: 'Pending',
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+  updatedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Employee',
+  },
+  leaveQuota: {
+    type: Number,
+    default: 12,
+  },
+  leaveCount: {
+    type: Number,
+    default: 0,
+  },
+  deleted_at: {
+    type: Date,
+  },
 }, { timestamps: true }); // Optional: adds createdAt and updatedAt fields
 
 const Employee = mongoose.model('Employee', employeeSchema);

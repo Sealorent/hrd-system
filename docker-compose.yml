@@ -51,14 +51,17 @@ services:
       KONG_PROXY_ERROR_LOG: /dev/stderr
       KONG_ADMIN_ERROR_LOG: /dev/stderr
       KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml  # Use declarative config
     ports:
-      - "8000:8000"
+      - "8000:8000" # Kong proxy
       - "8443:8443"
-      - "8001:8001"
+      - "8001:8001" # Kong admin API
       - "8444:8444"
     depends_on:
       kong-migrations:
         condition: service_healthy
+    volumes:
+      - ./gateway/kong.yml:/usr/local/kong/declarative/kong.yml  # Mount your kong.yml file
 
   employee-microservice:
     build: ./employee-microservice
@@ -67,12 +70,21 @@ services:
     environment:
       MONGO_URI: mongodb://mongo:27017/employee-db
 
-  presence-microservice:
-    build: ./presence-microservice
+  leave-microservice:
+    build: ./leave-microservice
     ports:
       - "3001:3001"
     environment:
-      MONGO_URI: mongodb://mongo:27017/presence-db
+      MONGO_URI: mongodb://mongo:27017/leave-db
+
+  frontend:
+    build: ./frontend  # Assuming the Dockerfile is in the 'frontend' directory
+    ports:
+      - "2000:2000"  # Expose the frontend on port 2000
+    environment:
+      NEXT_PUBLIC_API_URL: http://kong:8000  # Use Kong's proxy for API calls
+    depends_on:
+      - kong  # Wait for Kong to be ready
 
   mongo: # MongoDB service
     image: mongo:latest
@@ -80,32 +92,6 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-  
-  # setup:
-  #   image: curlimages/curl:latest
-  #   depends_on:
-  #     - kong
-  #     - employee-microservice
-  #   entrypoint: >
-  #     /bin/sh -c "
-  #       sleep 20;  # Wait for services to start
-  #       curl -i -X POST http://kong:8001/services/ \
-  #         --data 'name=employee-microservice' \
-  #         --data 'url=http://employee-microservice:3000';  # Ensure the URL points to the correct port
-  #       curl -i -X POST http://kong:8001/services/employee-microservice/routes \
-  #         --data 'paths[]=/employee' \
-  #         --data 'methods[]=GET' \
-  #         --data 'methods[]=POST';
-  #       curl -i -X POST http://kong:8001/services/employee-microservice/routes \
-  #         --data 'paths[]=/auth/register' \
-  #         --data 'methods[]=POST';
-  #       curl -i -X POST http://kong:8001/services/employee-microservice/routes \
-  #         --data 'paths[]=/auth/login' \
-  #         --data 'methods[]=POST';
-  #       curl -i -X POST http://kong:8001/services/employee-microservice/routes \
-  #         --data 'paths[]=/auth' \
-  #         --data 'methods[]=POST';
-  #     "
 
 volumes:
   kong-database:
