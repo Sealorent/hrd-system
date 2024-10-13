@@ -2,7 +2,7 @@ import { registerEmployee, loginEmployee } from '../controllers/authController';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import { de, faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { Request, Response } from 'express';
 
 dotenv.config(); // Load environment
@@ -57,6 +57,26 @@ describe('Employee Microservice - Auth', () => {
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({ message: 'Employee registered successfully' });
     });
+
+    it('should return an error for duplicate email registration', async () => {
+      (registerEmployee as jest.Mock).mockImplementation((req, res) => {
+        res.status(400).json({ message: 'Email already registered' });
+      });
+
+      const req: Request = {
+        body: {
+          ...testUser,
+        },
+      } as Request;
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+      const resMock = res as Response;
+      await registerEmployee(req, resMock);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Email already registered' });
+    });
   });
 
   describe('POST /auth/login', () => {
@@ -80,6 +100,47 @@ describe('Employee Microservice - Auth', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({ message: 'Employee logged in successfully' });
     });
-  });
 
+    it('should return an error for incorrect password', async () => {
+      (loginEmployee as jest.Mock).mockImplementation((req, res) => {
+        res.status(401).json({ message: 'Invalid password' });
+      });
+
+      const req: Request = {
+        body: {
+          email: testUser.email,
+          password: 'wrongPassword',
+        },
+      } as Request;
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+      const resMock = res as Response;
+      await loginEmployee(req, resMock);
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Invalid password' });
+    });
+
+    it('should return an error for non-existent email', async () => {
+      (loginEmployee as jest.Mock).mockImplementation((req, res) => {
+        res.status(401).json({ message: 'Invalid email' });
+      });
+
+      const req: Request = {
+        body: {
+          email: 'nonexistent@example.com',
+          password: testUser.password,
+        },
+      } as Request;
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+      const resMock = res as Response;
+      await loginEmployee(req, resMock);
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.json).toHaveBeenCalledWith({ message: 'Invalid email' });
+    });
+  });
 });

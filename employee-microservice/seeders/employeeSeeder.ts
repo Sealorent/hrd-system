@@ -16,6 +16,30 @@ const employeesData = [
     status: 'Accepted',
     updatedBy: null,  
   },
+  {
+    email: 'marketing@example.com',
+    username: 'marketing',
+    password: 'password123',
+    position: 'Seo Specialist',
+    department: 'Marketing',
+    acceptedBy: null,
+    acceptedAt: null,
+    isAdmin: false,
+    status: 'Accepted',
+    updatedBy: null,
+  },
+  {
+    email: 'accountant@example.com',
+    username: 'accountant',
+    password: 'password123',
+    position: 'Accountant',
+    department: 'Finance',
+    acceptedBy: null,
+    acceptedAt: null,
+    isAdmin: false,
+    status: 'Pending',
+    updatedBy: null,
+  }
 ];
 
 const seedEmployees = async () => {
