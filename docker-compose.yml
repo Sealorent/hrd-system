@@ -80,7 +80,7 @@ services:
   frontend:
     build: ./frontend  # Assuming the Dockerfile is in the 'frontend' directory
     ports:
-      - "2000:2000"  # Expose the frontend on port 2000
+      - "8009:3000"  # Expose the frontend on port 2000
     environment:
       NEXT_PUBLIC_API_URL: http://kong:8000  # Use Kong's proxy for API calls
     depends_on:

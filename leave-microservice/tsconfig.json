@@ -15,7 +15,7 @@
     "models/**/*.ts",
     "utils/**/*.ts",
     "seeders/**/*.ts",
-    "tests/**/*.ts"
+    "_tests_/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

@@ -7,14 +7,9 @@ const config: Config = {
   setupFilesAfterEnv: ['./jest.setup.ts'], // Optional: Path to setup file for additional configuration
   moduleFileExtensions: ['ts', 'js', 'json', 'node'], // Supported file extensions
   transform: {
-    '^.+\\.ts$': 'ts-jest', // Transform TypeScript files using ts-jest
+    '^.+\\.tsx?$': ['ts-jest', { tsconfig: 'tsconfig.json' }], // Define ts-jest configuration here
   },
-  testMatch: ['**/tests/**/*.test.ts'], // Match test files with .test.ts in the tests folder
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.json', // Point to your tsconfig file for TypeScript configuration
-    },
-  },
+  testMatch: ['**/_tests_/**/*.test.ts'], // Match test files with .test.ts in the tests folder
 };
 
 export default config;

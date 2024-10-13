@@ -1,3 +1,4 @@
+# ./gateway/add_all_service.sh
 #!/bin/bash
 
 # Call clear_all_service.sh

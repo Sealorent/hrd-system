@@ -9,9 +9,9 @@ import { getVerifiedUser } from '../utils/jwt';
 export const getAllLeave = async (req: Request, res: Response) => {
   try {
     const leaves = await Leave.find().where('deleted_at').equals(null).select('-__v'); 
-    return sendSuccessResponse(res, leaves, 'Employees retrieved successfully');
+    return sendSuccessResponse(res, leaves, 'Leaves retrieved successfully');
   } catch (error) {
-    return sendErrorResponse(res, 'Error retrieving employees');
+    return sendErrorResponse(res, 'Error retrieving leaves');
   }
 };
 
