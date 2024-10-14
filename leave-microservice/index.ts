@@ -16,6 +16,11 @@ const port = process.env.PORT || 3001;
 
 app.use(express.json());
 
+connectDB().then(() => {
+  seedLeave();
+});
+
+
 app.get('/', (req: Request, res: Response) => {
   res.send('Leave Microservice is running');
 });
@@ -24,24 +29,35 @@ app.get('/leaves', getAllLeave);
 app.put('/leaves/status', authMiddleware, changeStatusLeave);
 app.post('/leaves/add', authMiddleware, addLeave);
 
-export const startServer = async () => {
-  try {
-    await connectDB();
-    await seedLeave();
+app.listen(port, () => {
+  console.log(`Register Route:`);
+  app._router.stack.forEach((route: any) => {
+    if (route.route) {
+      console.log(route.route.path);
+      console.log('Route:', route.route.path + ' - Method:', route.route.stack[0].method);
+    }
+  });
+  console.log(`Leave Microservice run on ${port}`);
+});
+
+// export const startServer = async () => {
+//   try {
+//     await connectDB();
+//     await seedLeave();
     
-    app.listen(port, () => {
-      console.log(`Register Route:`);
-      app._router.stack.forEach((route: any) => {
-        if (route.route) {
-          console.log('Route:', route.route.path + ' - Method:', route.route.stack[0].method);
-        }
-      });
-      console.log(`Leave Microservice running on port ${port}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-};
+//     app.listen(port, () => {
+//       console.log(`Register Route:`);
+//       app._router.stack.forEach((route: any) => {
+//         if (route.route) {
+//           console.log('Route:', route.route.path + ' - Method:', route.route.stack[0].method);
+//         }
+//       });
+//       console.log(`Leave Microservice running on port ${port}`);
+//     });
+//   } catch (error) {
+//     console.error('Failed to start server:', error);
+//     process.exit(1);
+//   }
+// };
 
 export default app;

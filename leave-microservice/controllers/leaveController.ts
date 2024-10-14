@@ -47,13 +47,16 @@ export const changeStatusLeave = async (req: Request, res: Response) => {
 }
 
 export const addLeave = async (req: Request, res: Response) => {
+  console.log('Request received on /leaves/add');
   try {
     const { error, user } = getVerifiedUser(req.header('Authorization'));
-    const { startDate, endDate, leaveType, reason, totalDays } = req.body;
 
     if (error) {
       return sendErrorResponse(res, error, 403);      
     }
+
+    const { startDate, endDate, leaveType, reason, totalDays } = req.body;
+
 
     const leave = new Leave({
       employeeId: user?.employeeJwt?._id,
@@ -68,7 +71,8 @@ export const addLeave = async (req: Request, res: Response) => {
     await leave.save();
 
     return sendSuccessResponse(res, leave, 'Leave added successfully');
-  } catch (error) {
-    return sendErrorResponse(res, 'Error adding leave');
+  } catch (error : any) {
+    console.log('Error:', error);
+    return sendErrorResponse(res, error, 500);
   }
 }

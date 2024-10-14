@@ -52,6 +52,10 @@
                 return sendErrorResponse(res, 'Invalid password', 401);
             }
 
+            if(employee.deleted_at !== null || employee.status !== 'Rejected') {
+                return sendErrorResponse(res, 'Account is disabled', 401);
+            }
+
             // Create a JWT token excluding the password
             const { password: _, ...employeeJwt } = employee.toJSON(); // Use destructuring to exclude the password
 

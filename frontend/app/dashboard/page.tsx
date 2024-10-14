@@ -4,10 +4,28 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useEffect, useState } from "react";
 import http from "../utils/http";
 import useDashboardData from "../hooks/dashboardHook";
+import useLeaveData from "../hooks/leaveHook";
+import { useAuth } from "../context/AuthContext";
+import useLeaveRequestData from "../hooks/leaveRequestHook";
 
 export default function DashboardPage() {
     const { data, error, loading } = useDashboardData(); // Use the custom hook
+    const { data : leavesData, error: errorLeaveData, loading : loadingLeaveData } = useLeaveRequestData(); // Use the custom hook
+    const { user } = useAuth();
+    const [totalRequests, setTotalRequests] = useState(0);  
+    const [totalRequestsUser, setTotalRequestsUser] = useState(0);
 
+    useEffect(() => {
+        if (leavesData) {
+            // filter out the user's own leave requests
+            const filteredLeavesUser = leavesData.requestLeaves.filter((leave) => leave.employeeId !== user.id && leave.status === 'Pending');
+            const filteredLeaves = leavesData.requestLeaves.filter((leave) => leave.status !== 'Accepted');
+            setTotalRequestsUser(filteredLeavesUser.length);
+            setTotalRequests(filteredLeaves.length);
+        }
+    }, [leavesData]);
+
+    
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -41,6 +59,7 @@ export default function DashboardPage() {
             {/* <p className="text-xs text-muted-foreground">+180 from last month</p> */}
             </CardContent>
         </Card>
+        {user.isAdmin === true && (
         <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pending Leave Requests</CardTitle>
@@ -59,10 +78,36 @@ export default function DashboardPage() {
             </svg>
             </CardHeader>
             <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">+2 since yesterday</p>
+            <div className="text-2xl font-bold">{totalRequests}</div>
+            {/* <p className="text-xs text-muted-foreground">+2 since yesterday</p> */}
             </CardContent>
         </Card>
+        )}
+         {user.isAdmin === false && (
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">My Pending Leave Requests</CardTitle>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    className="h-4 w-4 text-muted-foreground"
+                >
+                    <rect width="20" height="14" x="2" y="5" rx="2" />
+                    <path d="M2 10h20" />
+                </svg>
+                </CardHeader>
+                <CardContent>
+                <div className="text-2xl font-bold">{ totalRequestsUser }</div>
+                {/* <p className="text-xs text-muted-foreground">+2 since yesterday</p> */}
+                </CardContent>
+            </Card>
+        )}
+        
         
         </div>
     )

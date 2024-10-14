@@ -1,23 +1,24 @@
-# 1. Use an official Node.js runtime as a parent image
-FROM node:18-alpine AS builder
+# Use an official Node.js Alpine-based image
+FROM node:18-alpine
 
-# 2. Set the working directory in the container
+# Set the working directory in the container
 WORKDIR /app
 
-# 3. Copy package.json and package-lock.json to the working directory
+# Copy package.json and package-lock.json to the working directory
 COPY package.json package-lock.json ./
 
-# 4. Install the dependencies
-RUN npm install
+# Install dependencies and necessary build tools
+RUN apk add --no-cache libc6-compat python3 make g++ && \
+    npm install
 
-# 5. Copy the rest of the application code
+# Copy the rest of the application code
 COPY . .
 
-# 6. Build the Next.js application
+# Build the Next.js application
 RUN npm run build
 
-# 7. Expose the port the app runs on
+# Expose the port the app runs on
 EXPOSE 8009
 
-# 8. Command to run the Next.js app in production mode
+# Command to run the Next.js app in production mode
 CMD ["npm", "start"]

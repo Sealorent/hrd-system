@@ -47,26 +47,37 @@ app.put('/employees/update-profile', authMiddleware, updateProfile); // Update e
 app.put('/employees/update-leave-count', authMiddleware, updateLeaveCount); // Update employee status route
 app.get('/employees/profile', authMiddleware, getProfileEmployee); // Get employee profile route
 
-// Start the server
-export const startServer = async () => {
-  try {
-    await connectDB();
-    await seedEmployees();
+app.listen(port, () => {
+  console.log(`Register Route:`);
+  app._router.stack.forEach((route: any) => {
+    if (route.route) {
+      console.log(route.route.path);
+      console.log('Route:', route.route.path + ' - Method:', route.route.stack[0].method);
+    }
+  });
+  console.log(`Employee Microservice run on ${port}`);
+});
+
+// // Start the server
+// export const startServer = async () => {
+//   try {
+//     await connectDB();
+//     await seedEmployees();
     
-    app.listen(port, () => {
-      console.log(`Register Route:`);
-      app._router.stack.forEach((route: any) => {
-        if (route.route) {
-          console.log('Route:', route.route.path + ' - Method:', route.route.stack[0].method);
-        }
-      });
-      console.log(`Leave Microservice running on port ${port}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-};
+//     app.listen(port, () => {
+//       console.log(`Register Route:`);
+//       app._router.stack.forEach((route: any) => {
+//         if (route.route) {
+//           console.log('Route:', route.route.path + ' - Method:', route.route.stack[0].method);
+//         }
+//       });
+//       console.log(`Leave Microservice running on port ${port}`);
+//     });
+//   } catch (error) {
+//     console.error('Failed to start server:', error);
+//     process.exit(1);
+//   }
+// };
 
 export default app;
 

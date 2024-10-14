@@ -65,6 +65,7 @@ export default function LeavePage() {
   const [success, setSuccess] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({}); // Use the defined type for form errors
   const [errorDialog, setErrorDialog] = useState({ open: false, message: "" });
+  const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({
     startDate: "",
     endDate: "",
@@ -103,7 +104,7 @@ export default function LeavePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setIsLoading(true);
     if (!validateForm()) {
       return; // Stop submission if validation fails
     }
@@ -121,8 +122,10 @@ export default function LeavePage() {
         reason: "",
       });
       setSuccess(true);
+      setIsLoading(false);
     } catch (err: any) {
       setErrorDialog({ open: true, message: err.message });
+      setIsLoading(false);
     }
   };
 
@@ -219,7 +222,9 @@ export default function LeavePage() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit">Submit Request</Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Submitting..." : "Submit Request"}
+            </Button>
           </CardFooter>
         </Card>
       </form>
