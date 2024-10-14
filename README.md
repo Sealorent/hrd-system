@@ -13,6 +13,12 @@ This is a microservice-based HR System consisting of various components, includi
 - **gateway**: API gateway using Kong to route requests to different microservices.
 - **frontend**: User interface built with Next.js for interacting with the system.
 
+
+## How To Run
+- chmod +x ./gateway/*
+- ./gateway/add_all_service.sh
+- ./gateway/enable_global_cors.sh
+
 ## Backend Test Instructions
 
 To run the backend tests for `employee-microservice`, use the following commands:
