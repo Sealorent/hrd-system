@@ -52,7 +52,9 @@
                 return sendErrorResponse(res, 'Invalid password', 401);
             }
 
-            if(employee.deleted_at !== null || employee.status !== 'Rejected') {
+            console.log('Employee status:', employee.status);
+
+            if(employee.deletedAt !== null || employee.status == 'Rejected') {
                 return sendErrorResponse(res, 'Account is disabled', 401);
             }
 

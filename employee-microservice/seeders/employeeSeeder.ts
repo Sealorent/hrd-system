@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import Employee from '../models/employeeModel'; // Adjust the path as necessary
 import bcrypt from 'bcrypt';
 import { stat } from 'fs';
+import { de } from '@faker-js/faker/.';
 
 const employeesData = [
   {
@@ -15,6 +16,7 @@ const employeesData = [
     isAdmin: true,
     status: 'Accepted',
     updatedBy: null,  
+    deletedAt: null,
   },
   {
     email: 'marketing@example.com',
@@ -27,6 +29,7 @@ const employeesData = [
     isAdmin: false,
     status: 'Accepted',
     updatedBy: null,
+    deletedAt: null,
   },
   {
     email: 'accountant@example.com',
@@ -39,6 +42,7 @@ const employeesData = [
     isAdmin: false,
     status: 'Pending',
     updatedBy: null,
+    deletedAt: null,
   }
 ];
 

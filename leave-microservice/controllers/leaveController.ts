@@ -8,7 +8,7 @@ import { getVerifiedUser } from '../utils/jwt';
 // GET route to retrieve all employees
 export const getAllLeave = async (req: Request, res: Response) => {
   try {
-    const leaves = await Leave.find().where('deleted_at').equals(null).select('-__v'); 
+    const leaves = await Leave.find().where('deletedAt').equals(null).select('-__v'); 
     return sendSuccessResponse(res, leaves, 'Leaves retrieved successfully');
   } catch (error) {
     return sendErrorResponse(res, 'Error retrieving leaves');

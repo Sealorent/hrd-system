@@ -28,7 +28,7 @@ export const getProfileEmployee = async (req : Request, res : Response) => {
 // GET route to retrieve all employees
 export const getAllEmployees = async (req: Request, res: Response) => {
   try {
-    const employees = await Employee.find().where('deleted_at').equals(null).select('-password -isAdmin -__v'); 
+    const employees = await Employee.find().where('deletedAt').equals(null).select('-password -isAdmin -__v'); 
     return sendSuccessResponse(res, employees, 'Employees retrieved successfully');
   } catch (error) {
     return sendErrorResponse(res, 'Error retrieving employees');

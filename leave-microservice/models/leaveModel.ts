@@ -41,7 +41,7 @@ const leaveSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  deleted_at: {
+  deletedAt: {
     type: Date,
     default: null,
   },  

@@ -54,7 +54,7 @@ const employeeSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  deleted_at: {
+  deletedAt: {
     type: Date,
   },
 }, { timestamps: true }); // Optional: adds createdAt and updatedAt fields
