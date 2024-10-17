@@ -1,3 +1,4 @@
+# Version: '2'
 version: '3.8'
 
 services:
@@ -51,12 +52,15 @@ services:
       KONG_PROXY_ERROR_LOG: /dev/stderr
       KONG_ADMIN_ERROR_LOG: /dev/stderr
       KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_ADMIN_GUI_LISTEN: "0.0.0.0:8002"  # Admin GUI listen on port 8002
+      KONG_ADMIN_GUI_URL: "http://localhost:8002"  # Admin GUI URL
       KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml  # Use declarative config
     ports:
-      - "8000:8000" # Kong proxy
+      - "8000:8000"  # Kong proxy
       - "8443:8443"
-      - "8001:8001" # Kong admin API
+      - "8001:8001"  # Kong admin API
       - "8444:8444"
+      - "8002:8002"  # Kong admin GUI port
     depends_on:
       kong-migrations:
         condition: service_healthy
@@ -96,3 +100,4 @@ services:
 volumes:
   kong-database:
   mongo-data:
+
